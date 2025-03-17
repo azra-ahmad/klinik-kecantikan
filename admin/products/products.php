@@ -35,7 +35,7 @@
                 <td class='py-3 px-4'>Rp. " . number_format($row['price'], 0, ',', '.') . "</td>
                 <td class='py-3 px-4'>{$row['stock']}</td>";
 
-            // Tampilkan 3D Model
+            // Tampilkan 3D Model jika ada
             if (!empty($row['model_3d'])) {
                 echo "<td class='py-3 px-4'>
                     <model-viewer src='../{$row['model_3d']}' 
