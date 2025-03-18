@@ -30,60 +30,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // **2. Upload & Ekstrak Model 3D (ZIP)**
-    if (!empty($_FILES['model']['name'])) {
-        $zipFile = $_FILES['model']['name'];
-        $zipTmp = $_FILES['model']['tmp_name'];
-        $zipExt = pathinfo($zipFile, PATHINFO_EXTENSION);
-    
-        if ($zipExt !== 'zip') {
-            die("File harus berformat ZIP.");
-        }
-    
-        // Tentukan folder tujuan berdasarkan nama produk
-        $modelDir = "../../uploads/models/" . preg_replace("/[^a-zA-Z0-9]/", "_", $name);
-        
-        // Pastikan folder tujuan ada
+    if (!empty($_FILES['model_zip']['name'])) {
+        $zipFile = $_FILES['model_zip']['tmp_name'];
+        $folderName = strtolower(str_replace(" ", "_", $name)); // Nama folder dari produk
+        $modelDir = $targetDir . "models/" . $folderName . "/";
+
         if (!file_exists($modelDir)) {
             mkdir($modelDir, 0777, true);
         }
-    
-        $zipPath = $modelDir . "/" . basename($zipFile);
-        move_uploaded_file($zipTmp, $zipPath);
-    
-        // Ekstrak ZIP
+
         $zip = new ZipArchive;
-        if ($zip->open($zipPath) === TRUE) {
+        if ($zip->open($zipFile) === TRUE) {
             $zip->extractTo($modelDir);
             $zip->close();
-    
-            // Hapus file ZIP setelah ekstrak
-            unlink($zipPath);
-    
-            // Cek apakah scene.gltf ada
-            if (file_exists($modelDir . "/scene.gltf")) {
-                $modelPath = "uploads/models/" . basename($modelDir) . "/scene.gltf";
-            } else {
-                die("File scene.gltf tidak ditemukan dalam ZIP.");
-            }
+            
+            $modelPath = "uploads/models/$folderName/scene.gltf"; // Simpan path ke GLTF utama
         } else {
             die("Gagal mengekstrak ZIP.");
         }
-    } else {
-        $modelPath = null; // Tidak ada model 3D
     }
-    
-    // Insert data ke database
+
+    // **3. Simpan ke Database**
     $stmt = $conn->prepare("INSERT INTO products (name, price, stock, image, category, model_3d) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("sdisss", $name, $price, $stock, $image, $category, $modelPath);
-    
+
     if ($stmt->execute()) {
         header("Location: ../dashboard.php");
         exit;
     } else {
         echo "Error: " . $stmt->error;
-    }    
+    }
 }
 ?>
+
 
 
 <!DOCTYPE html>
