@@ -21,7 +21,7 @@ include '../assets/db/database.php';
         <?php include "../layout/navbar.php" ?>
 
         <!-- Produk Section -->
-        <div>
+        <div> 
             <section class="py-12 px-6">
                 <div class="max-w-7xl mx-auto">
                     <h2 class="relative text-3xl font-extrabold text-center text-gray-800 mb-8 p-4 border-4 border border-blue-500 rounded-xl shadow-md bg-gradient-to-r from-blue-200 via-white to-blue-100">
@@ -69,57 +69,54 @@ include '../assets/db/database.php';
                                 : $product['price'];
                         ?>
                             <!-- Product Card -->
-                            <div class="bg-white shadow-md rounded-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                                <div class="relative">
-                                    <img src="../uploads/<?= htmlspecialchars($product['image']) ?>"
-                                        alt="<?= htmlspecialchars($product['name']) ?>"
-                                        class="w-full h-48 object-cover">
-                                    <?php
-                                    // Tampilkan 3D Model jika ada
-                                    if (!empty($product['model_3d'])) {
-                                        echo "<div class='py-3 px-4'>
-                                            <model-viewer src='../" . htmlspecialchars($product['model_3d']) . "' 
-                                                alt='3D Model' 
-                                                camera-controls 
-                                                auto-rotate 
-                                                style='width: 200px; height: 200px;'>
-                                            </model-viewer>
-                                        </div>";
-                                    } else {
-                                        echo "<div class='py-3 px-4'><i>Tidak ada model 3D</i></div>";
-                                    }
-                                    ?>
+                        <div class="bg-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                        <div class="relative">
+                            <?php
+                            if (!empty($product['model_3d'])) {
+                                echo "<div class='absolute top-2 right-2 w-24 h-24 bg-white p-1 rounded-lg shadow-md border border-gray-200'>
+                                    <model-viewer src='../" . htmlspecialchars($product['model_3d']) . "' 
+                                        alt='3D Model' 
+                                        camera-controls 
+                                        auto-rotate 
+                                        style='width: 100%; height: 100%;'>
+                                    </model-viewer>
+                                </div>";
+                            }
+                            ?>
+                            <img src="../uploads/<?= htmlspecialchars($product['image']) ?>"
+                                alt="<?= htmlspecialchars($product['name']) ?>"
+                                class="w-full h-48 object-cover rounded-lg">
+                            <?php if ($isPromoValid): ?>
+                                <span class="absolute top-4 left-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 px-3 rounded-full text-sm">
+                                    Diskon <?= $product['discount'] ?>%
+                                </span>
+                            <?php endif; ?>
+                        </div>
 
 
-
-                                    <?php if ($isPromoValid): ?>
-                                        <span class="absolute top-4 left-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white py-1 px-3 rounded-full text-sm">
-                                            Diskon <?= $product['discount'] ?>%
-                                        </span>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="p-6 flex flex-col bg-gradient-to-r from-blue-100 to-blue-200 min-h-[300px]">
-                                    <h3 class="text-xl font-bold text-gray-800 "><?= htmlspecialchars($product['name']) ?></h3>
-                                    <p class="text-lg font-semibold mb-1">Kategori:
-                                        <?= htmlspecialchars(str_replace('Product-', '', $product['category'])) ?>
-                                    </p>
-                                    <p class="text-gray-600 text-sm flex-grow">Stok: <?= htmlspecialchars($product['stock']) ?></p>
-                                    <?php if ($isPromoValid): ?>
-                                        <p class="text-gray-400 line-through text-sm mt-2">Rp <?= number_format($product['price'], 0, ',', '.') ?></p>
-                                    <?php endif; ?>
-                                    <p class="text-blue-500 text-lg font-bold mt-1">Rp <?= number_format($discountedPrice, 0, ',', '.') ?></p>
-                                    <a href="https://wa.me/6281234567890" target="_blank" class="block mt-4 w-full">
-                                        <button class="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-2 px-4 rounded-lg transition-transform transform hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2">
-                                            <i class="fa-brands fa-whatsapp"></i> Beli Sekarang
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        <?php endwhile; ?>
+                        <div class="p-6 flex flex-col bg-gradient-to-r from-blue-100 to-blue-200 min-h-[300px]">
+                            <h3 class="text-xl font-bold text-gray-800"><?= htmlspecialchars($product['name']) ?></h3>
+                            <p class="text-lg font-semibold mb-1">Kategori:
+                                <?= htmlspecialchars(str_replace('Product-', '', $product['category'])) ?>
+                            </p>
+                            <p class="text-gray-600 text-sm flex-grow">Stok: <?= htmlspecialchars($product['stock']) ?></p>
+                            <?php if ($isPromoValid): ?>
+                                <p class="text-gray-400 line-through text-sm mt-2">Rp <?= number_format($product['price'], 0, ',', '.') ?></p>
+                            <?php endif; ?>
+                            <p class="text-blue-500 text-lg font-bold mt-1">Rp <?= number_format($discountedPrice, 0, ',', '.') ?></p>
+                            <a href="https://wa.me/6281234567890" target="_blank" class="block mt-4 w-full">
+                                <button class="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white py-2 px-4 rounded-lg transition-transform transform hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2">
+                                    <i class="fa-brands fa-whatsapp"></i> Beli Sekarang
+                                </button>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </section>
+                <?php endwhile; ?>
+            </div>
         </div>
+    </section>
+</div>
+
 
 
 
